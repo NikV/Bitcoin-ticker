@@ -1,6 +1,12 @@
 <?php
 /**
  * Plugin name: Epic Bitcoin ticker
+ * Description: Bitcoin Value widget, dashboard widget, and shortcode
+ * Author: Nikhil Vimal
+ * Author URI: http://nik.techvoltz.com
+ * Version: 1.0
+ * Plugin URI:
+ * License: GNU GPLv2+
  */
 
 // If this file is called directly, abort.
