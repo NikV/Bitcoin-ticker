@@ -25,7 +25,7 @@ Class Epic_Bitcoin_ticker {
 	 * The main BPI Value Function
 	 */
 	public function epic_bitcoin_ticker_function() {
-		if ( ! $joke = get_transient('epic_bitcoin_ticker') ) {
+		if ( ! $output_USD = get_transient('epic_bitcoin_ticker_USD') &&  ! $output_EUR = get_transient('epic_bitcoin_ticker_EUR') ) {
 
 			// If there's no cached version, let's get a rate
 			$jsonurl = "http://api.coindesk.com/v1/bpi/currentprice.json";
@@ -36,14 +36,19 @@ Class Epic_Bitcoin_ticker {
 			else {
 				// If everything's okay, parse the body and json_decode it
 				$json_output = json_decode( wp_remote_retrieve_body( $json ));
-				$joke = 'USD: $' . $json_output->bpi->USD->rate;
+				$output_USD = 'USD: $' . $json_output->bpi->USD->rate;
+				$output_EUR = 'EUR: ' . $json_output->bpi->EUR->rate . ' Euros ';
+
 
 				// Store the result in a transient, expires after 1 minute
-				set_transient( 'epic_bitcoin_ticker', $joke, 60 * 1 );
+				set_transient( 'epic_bitcoin_ticker_USD', $output_USD, 60 * 1 );
+				set_transient( 'epic_bitcoin_ticker_EUR', $output_EUR, 60 * 1 );
+
 			}
 		}
 
-		echo esc_html( $joke );
+		echo esc_html( $output_USD ) . '</p>';
+		echo esc_html( $output_EUR );
 		echo '<p><strong>Check back often for a new index</strong></p>';
 	}
 
