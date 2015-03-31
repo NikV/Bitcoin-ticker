@@ -25,7 +25,7 @@ Class Epic_Bitcoin_ticker {
 	 * The main BPI Value Function
 	 */
 	public function epic_bitcoin_ticker_function() {
-		if ( ! $output_USD = get_transient('epic_bitcoin_ticker_USD') &&  ! $output_EUR = get_transient('epic_bitcoin_ticker_EUR') ) {
+		if ( ! $output_USD = get_transient('epic_bitcoin_ticker_USD') &&  ! $output_EUR = get_transient('epic_bitcoin_ticker_EUR') && ! $output_GBP = get_transient('epic_bitcoin_ticker_GBP') ) {
 
 			// If there's no cached version, let's get a rate
 			$jsonurl = "http://api.coindesk.com/v1/bpi/currentprice.json";
@@ -37,24 +37,32 @@ Class Epic_Bitcoin_ticker {
 				// If everything's okay, parse the body and json_decode it
 				$json_output = json_decode( wp_remote_retrieve_body( $json ));
 				$output_USD = 'USD: $' . $json_output->bpi->USD->rate;
-				$output_EUR = 'EUR: ' . $json_output->bpi->EUR->rate . ' Euros ';
+				$output_EUR = 'EUR: '  . $json_output->bpi->EUR->rate . ' Euros';
+				$output_GBP = 'GBP: '  . $json_output->bpi->GBP->rate . ' Pounds';
 
 
 				// Store the result in a transient, expires after 1 minute
 				set_transient( 'epic_bitcoin_ticker_USD', $output_USD, 60 * 1 );
 				set_transient( 'epic_bitcoin_ticker_EUR', $output_EUR, 60 * 1 );
+				set_transient( 'epic_bitcoin_ticker_GBP', $output_GBP, 60 * 1 );
+
 
 			}
 		}
 
 		echo esc_html( $output_USD ) . '</p>';
-		echo esc_html( $output_EUR );
+		echo esc_html( $output_EUR ) . '</p>';
+		echo esc_html( $output_GBP ) . '</p>';
 		echo '<p><strong>Check back often for a new index</strong></p>';
 	}
 
 	// The shortcode function for [epic-bitcoin-ticker]
 	public function epic_bitcoin_ticker_shortcode() {
+		ob_start();
+
 		return $this->epic_bitcoin_ticker_function();
+
+		return ob_get_clean();
 	}
 
 	/**
