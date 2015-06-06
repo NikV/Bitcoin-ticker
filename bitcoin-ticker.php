@@ -34,6 +34,7 @@ Class Epic_Bitcoin_ticker {
 				return "BPI not found :(";
 			}
 			else {
+
 				// If everything's okay, parse the body and json_decode it
 				$json_output = json_decode( wp_remote_retrieve_body( $json ));
 				$output_USD = 'USD: $' . $json_output->bpi->USD->rate;
